@@ -1,0 +1,1 @@
+# Auto-piano-script-by-Kuro.lua
