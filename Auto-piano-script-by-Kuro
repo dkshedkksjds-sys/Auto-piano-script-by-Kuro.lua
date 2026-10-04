@@ -1,0 +1,477 @@
+local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"))()
+
+local VirtualInputManager = game:GetService("VirtualInputManager")
+
+local Window = WindUI:CreateWindow({
+    Title = "Myriad Nyum",
+    Icon = "circle-dot",
+    Size = UDim2.fromOffset(500, 390),
+    Theme = "Dark",
+    Transparent = false,
+    Resizable = false,
+    SideBarWidth = 145
+})
+
+local Main = Window:Tab({
+    Title = "Main",
+    Icon = "music-2"
+})
+
+local Presets = Window:Tab({
+    Title = "Presets",
+    Icon = "library"
+})
+
+local UI = Window:Tab({
+    Title = "UI",
+    Icon = "settings-2"
+})
+
+local songs = {
+    ["Je te laisserai des"] = [[
+[4p]|[8e]|[8e] o
+[8i]|[qe]|[qe] y
+[4t]|[8e]|[8e]|
+[8p]|[qed]|[qes] a
+[4s]|[8e]|[8e]|
+8|[qe]|[qe]|
+4|[8e]|[8e]|
+[8p]|[qed]|[qea]|
+[6s]|[0t]|[0ta] s
+[5a]|[9r]|[9r] p
+[4a] p [8e]|[8e]|
+[4p]|[8ed]|5 p
+[6s]|[0t]|[0ta] s
+[5a]|[9r]|[9r] p
+[4a] p [8e]|[8e]|
+[4p]|[8es]|[5d]|
+[6f]|[0t]|[0td] s
+[5d] f [9rd]|[9rs]|
+[4d] s [8e]|[8e]|
+4|[8es]|[8e] d
+[1s]|[50]|[50]|
+5|[0w]|[0w]|
+3|[7W]|[7W]|
+4|[8e]|[8e]|
+[6eo] [tu] [80eo] [tu] [80eo] [tu]
+[5wo] [ru] [70wo] [tu] [70wo] [tu]
+[4eo] [tu] [80eo] [tu] [80eo] [tu]
+[4wo] [ru] [80wo] [tu] [80wo] [tu]
+[6eo] [tu] [80eo] [tu] [80eo] [tu]
+[5wo] [ru] [70wo] [tu] [70wo] [tu]
+[4eo] [tu] [80eo] [tu] [80eo] [tu]
+[4wo] [ru] [80wo] [tu] [80wo] [tu]
+[1wo] [tu] [580wo] [tu] [580wo] [tu]
+[1wo] [tu] [580wo] [tu] [580wo] [tu]
+[3WO] [tu] [70%WO] [tu] [70%WO] [tu]
+[4wp] [ti] [68qwp] [ti] [68qwp] [ti]
+6|[etu]||
+5|[wry]||
+4|[qet]||
+4|[qet]|5|
+[180w]|||
+[W30r]|||
+i o
+[4p]|[8e]|[8e] o
+[8i]|[qe]|[qe] y
+[4t]|[8e]|[8e]|
+[8p]|[qed]|[qes] a
+[4s]|[8e]|[8e]|
+8|[qe]|[qe]|
+4|[8e]|[8e]|
+[8p]|[qed]|[qes] a
+[6s]|[0t]|[0ta] s
+[5a]|[9r]|[9r] p
+[4a] p [8e]|[8e]|
+[4p]|[8ed]|5 d
+[6d]|[0t]|[0td] s
+[5d]|[9r]|[9r] d
+4|[8e]|[8e]|
+[4p]|[8es]|[5d]|
+[6f]|[0t]|[0t] d
+5 d [9r] d [9r] s
+[4d]|[8e]|[8e]|
+[4p] s [8e] d [8e] s
+[6f]|[0t]|[0t] d
+5 d [9r] d [9r] s
+[4d]|[8e]|[8e]|
+p d f d|s
+1|[50]|[50]|
+5|[0ws]|[0ws] a
+3|[7W]|[W7s]|
+4|[8ed] f [8ed]|
+1 s [50d] s [50]|
+5|[0ws]|[0ws] d
+[3d]|[7W] d [7W]|
+[4d]|[8ed] f [8ed]|
+1 s [50d] s [50]|
+5|[0ws]|[0ws] a
+[3d]|[7W] d [7W]|
+[4d]|[8ed] f [8ed]|
+1 s [50d] s [50]|
+5|[0ws]|[0ws] a
+3|[7W]|[7W]|
+[4s]|[8e]|[8e]|
+[6eo] [tu] [80eo] [tu] [80eo] [tu]
+[5wo] [ru] [70wo] [tu] [70wo] [tu]
+[4eo] [tu] [80eo] [tu] [80eo] [tu]
+[4wo] [ru] [80wo] [tu] [80wo] [tu]
+[6eo] [tu] [80eo] [tu] [80eo] [tu]
+[5wo] [ru] [70wo] [tu] [70wo] [tu]
+[4eo] [tu] [80eo] [tu] [80eo] [tu]
+[4wo] [ru] [80wo] [tu] [80wo] [tu]
+[180w]|||
+[W30r]
+]],
+    ["Golden Hour"] = "",
+    ["fur Elise"] = ""
+}
+
+local selectedSong = "Je te laisserai des"
+local customSheet = ""
+local minBPM = 228
+local maxBPM = 228
+local countdown = 1
+local playing = false
+local stopPlayback = false
+local hideOpenButton = false
+
+local normalKeys = {
+    ["0"]=Enum.KeyCode.Zero,["1"]=Enum.KeyCode.One,["2"]=Enum.KeyCode.Two,["3"]=Enum.KeyCode.Three,["4"]=Enum.KeyCode.Four,
+    ["5"]=Enum.KeyCode.Five,["6"]=Enum.KeyCode.Six,["7"]=Enum.KeyCode.Seven,["8"]=Enum.KeyCode.Eight,["9"]=Enum.KeyCode.Nine,
+    ["a"]=Enum.KeyCode.A,["b"]=Enum.KeyCode.B,["c"]=Enum.KeyCode.C,["d"]=Enum.KeyCode.D,["e"]=Enum.KeyCode.E,["f"]=Enum.KeyCode.F,
+    ["g"]=Enum.KeyCode.G,["h"]=Enum.KeyCode.H,["i"]=Enum.KeyCode.I,["j"]=Enum.KeyCode.J,["k"]=Enum.KeyCode.K,["l"]=Enum.KeyCode.L,
+    ["m"]=Enum.KeyCode.M,["n"]=Enum.KeyCode.N,["o"]=Enum.KeyCode.O,["p"]=Enum.KeyCode.P,["q"]=Enum.KeyCode.Q,["r"]=Enum.KeyCode.R,
+    ["s"]=Enum.KeyCode.S,["t"]=Enum.KeyCode.T,["u"]=Enum.KeyCode.U,["v"]=Enum.KeyCode.V,["w"]=Enum.KeyCode.W,["x"]=Enum.KeyCode.X,
+    ["y"]=Enum.KeyCode.Y,["z"]=Enum.KeyCode.Z,
+    ["-"]=Enum.KeyCode.Minus,["="]=Enum.KeyCode.Equals,["["]=Enum.KeyCode.LeftBracket,["]"]=Enum.KeyCode.RightBracket,
+    ["\\"]=Enum.KeyCode.BackSlash,[";"]=Enum.KeyCode.Semicolon,["'"]=Enum.KeyCode.Quote,[","]=Enum.KeyCode.Comma,
+    ["."]=Enum.KeyCode.Period,["/"]=Enum.KeyCode.Slash,["`"]=Enum.KeyCode.Backquote
+}
+
+local shiftedKeys = {
+    ["!"]=Enum.KeyCode.One,["@"]=Enum.KeyCode.Two,["#"]=Enum.KeyCode.Three,["$"]=Enum.KeyCode.Four,
+    ["%"]=Enum.KeyCode.Five,["^"]=Enum.KeyCode.Six,["&"]=Enum.KeyCode.Seven,["*"]=Enum.KeyCode.Eight,
+    ["("]=Enum.KeyCode.Nine,[")"]=Enum.KeyCode.Zero,["_"]=Enum.KeyCode.Minus,["+"]=Enum.KeyCode.Equals,
+    ["{"]=Enum.KeyCode.LeftBracket,["}"]=Enum.KeyCode.RightBracket,["|"]=Enum.KeyCode.BackSlash,
+    [":"]=Enum.KeyCode.Semicolon,['"']=Enum.KeyCode.Quote,["<"]=Enum.KeyCode.Comma,[">"]=Enum.KeyCode.Period,
+    ["?"]=Enum.KeyCode.Slash,["~"]=Enum.KeyCode.Backquote
+}
+
+local function resolveKey(char)
+    if shiftedKeys[char] then
+        return shiftedKeys[char], true
+    end
+
+    local lower = char:lower()
+
+    if normalKeys[lower] then
+        return normalKeys[lower], char ~= lower
+    end
+
+    return nil, false
+end
+
+local function tap(char)
+    local key, shift = resolveKey(char)
+
+    if not key then
+        return
+    end
+
+    if shift then
+        VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.LeftShift, false, game)
+    end
+
+    VirtualInputManager:SendKeyEvent(true, key, false, game)
+    VirtualInputManager:SendKeyEvent(false, key, false, game)
+
+    if shift then
+        VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.LeftShift, false, game)
+    end
+end
+
+local function chord(text)
+    local keys = {}
+    local needsShift = false
+
+    for i = 1, #text do
+        local key, shift = resolveKey(text:sub(i, i))
+
+        if key then
+            keys[#keys + 1] = key
+            if shift then
+                needsShift = true
+            end
+        end
+    end
+
+    if needsShift then
+        VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.LeftShift, false, game)
+    end
+
+    for _, key in ipairs(keys) do
+        VirtualInputManager:SendKeyEvent(true, key, false, game)
+    end
+
+    task.wait(0.008)
+
+    for i = #keys, 1, -1 do
+        VirtualInputManager:SendKeyEvent(false, keys[i], false, game)
+    end
+
+    if needsShift then
+        VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.LeftShift, false, game)
+    end
+end
+
+local function parse(text)
+    local events = {}
+    local i = 1
+
+    while i <= #text do
+        local c = text:sub(i, i)
+
+        if c == "[" then
+            local close = text:find("]", i + 1, true)
+
+            if close then
+                local value = text:sub(i + 1, close - 1)
+
+                if value ~= "" then
+                    events[#events + 1] = {
+                        type = "chord",
+                        value = value
+                    }
+                end
+
+                i = close + 1
+            else
+                i += 1
+            end
+        elseif c == "|" or c == "-" then
+            events[#events + 1] = {
+                type = "delay"
+            }
+
+            i += 1
+        elseif c == " " or c == "\n" or c == "\r" or c == "\t" then
+            events[#events + 1] = {
+                type = "gap"
+            }
+
+            i += 1
+        else
+            events[#events + 1] = {
+                type = "note",
+                value = c
+            }
+
+            i += 1
+        end
+    end
+
+    return events
+end
+
+local function getBeat()
+    local low = math.min(minBPM, maxBPM)
+    local high = math.max(minBPM, maxBPM)
+
+    if low == high then
+        return 60 / low
+    end
+
+    return 60 / math.random(low, high)
+end
+
+local function playSong()
+    local text = customSheet ~= "" and customSheet or songs[selectedSong]
+
+    if not text or text == "" then
+        playing = false
+        return
+    end
+
+    stopPlayback = false
+
+    task.wait(countdown)
+
+    if not playing or stopPlayback then
+        return
+    end
+
+    for _, event in ipairs(parse(text)) do
+        if not playing or stopPlayback then
+            break
+        end
+
+        if event.type == "chord" then
+            chord(event.value)
+            task.wait(getBeat() * 0.5)
+        elseif event.type == "note" then
+            tap(event.value)
+            task.wait(getBeat() * 0.5)
+        elseif event.type == "delay" then
+            task.wait(0.1)
+        elseif event.type == "gap" then
+            task.wait(getBeat() * 0.25)
+        end
+    end
+
+    playing = false
+end
+
+Main:Dropdown({
+    Title = "Song Type",
+    Values = {
+        "Preset",
+        "Sheet"
+    },
+    Value = "Preset",
+    Callback = function(value)
+        if value == "Preset" then
+            customSheet = ""
+        end
+    end
+})
+
+Main:Input({
+    Title = "Sheet",
+    Desc = "Use [abc] for simultaneous keys and - for 100ms",
+    Type = "Textarea",
+    Placeholder = "[4p]|[8e]|[8e] o",
+    Value = "",
+    Callback = function(value)
+        customSheet = value
+    end
+})
+
+Main:Slider({
+    Title = "Max BPM",
+    Desc = "Maximum playback tempo",
+    Step = 1,
+    Value = {
+        Min = 1,
+        Max = 250,
+        Default = 228
+    },
+    Callback = function(value)
+        maxBPM = value
+    end
+})
+
+Main:Slider({
+    Title = "Min BPM",
+    Desc = "Minimum playback tempo",
+    Step = 1,
+    Value = {
+        Min = 1,
+        Max = 250,
+        Default = 228
+    },
+    Callback = function(value)
+        minBPM = value
+    end
+})
+
+Main:Toggle({
+    Title = "Play",
+    Desc = "Start or stop the selected sheet",
+    Value = false,
+    Callback = function(value)
+        playing = value
+        stopPlayback = not value
+
+        if value then
+            task.spawn(playSong)
+        end
+    end
+})
+
+Main:Slider({
+    Title = "Countdown",
+    Desc = "Delay before playback starts",
+    Step = 0.1,
+    Value = {
+        Min = 1,
+        Max = 2,
+        Default = 1
+    },
+    Callback = function(value)
+        countdown = value
+    end
+})
+
+Presets:Dropdown({
+    Title = "Songs",
+    Values = {
+        "Je te laisserai des",
+        "Golden Hour",
+        "fur Elise"
+    },
+    Value = "Je te laisserai des",
+    Callback = function(value)
+        selectedSong = value
+        customSheet = ""
+    end
+})
+
+Presets:Button({
+    Title = "Load Selected Song",
+    Desc = "Use the selected preset on Main",
+    Icon = "music-2",
+    Callback = function()
+        customSheet = ""
+
+        WindUI:Notify({
+            Title = "Song Loaded",
+            Content = selectedSong,
+            Icon = "music-2",
+            Duration = 2
+        })
+    end
+})
+
+Presets:Input({
+    Title = "Custom Sheet",
+    Desc = "Paste your own sheet",
+    Type = "Textarea",
+    Placeholder = "Paste sheet here",
+    Value = "",
+    Callback = function(value)
+        customSheet = value
+    end
+})
+
+UI:Toggle({
+    Title = "Hide open button",
+    Desc = "Makes the window open button almost invisible",
+    Value = false,
+    Callback = function(value)
+        hideOpenButton = value
+
+        local possibleNames = {
+            "WindUI",
+            "WindUIOpen",
+            "OpenButton",
+            "ToggleButton"
+        }
+
+        for _, name in ipairs(possibleNames) do
+            local object = Window.Root and Window.Root:FindFirstChild(name, true)
+
+            if object and object:IsA("GuiObject") then
+                object.BackgroundTransparency = value and 0.99 or 0
+                object.ImageTransparency = value and 0.99 or 0
+                object.TextTransparency = value and 0.99 or 0
+            end
+        end
+
+        if Window.ToggleButton and Window.ToggleButton:IsA("GuiObject") then
+            Window.ToggleButton.BackgroundTransparency = value and 0.99 or 0
+            Window.ToggleButton.ImageTransparency = value and 0.99 or 0
+            Window.ToggleButton.TextTransparency = value and 0.99 or 0
+        end
+    end
+})
